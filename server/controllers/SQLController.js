@@ -10,6 +10,7 @@ const SQLController = {};
 SQLController.getSQLSchema = (req, res, next) => {
   let PSQL_URI;
   req.body.link ? (PSQL_URI = req.body.link) : (PSQL_URI = EX_PG_URI);
+  res.locals.PSQLURI = PSQL_URI;
   const db = new Pool({ connectionString: PSQL_URI });
   db.query(sqlQuery)
     .then((data) => {
