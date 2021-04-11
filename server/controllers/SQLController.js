@@ -1,7 +1,7 @@
 const { Pool } = require('pg');
 /* Example db URI */
 const EX_PG_URI =
-  'postgres://zhocexop:Ipv9EKas6bU6z9ehDXZQRorjITIXijGv@ziggy.db.elephantsql.com:5432/zhocexop';
+  'postgres://gilbfloq:VFX4UsWP_OJ43C2_jfOX2kRq-ktq0iXL@ziggy.db.elephantsql.com:5432/gilbfloq';
 const fs = require('fs');
 const sqlQuery = fs.readFileSync('server/tableQuery.sql', 'utf8');
 

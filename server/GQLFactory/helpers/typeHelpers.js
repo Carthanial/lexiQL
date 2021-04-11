@@ -60,7 +60,7 @@ mutationsHelper.mutationFields = (
       mutationFields += ',\n';
     } else {
       mutationFields += `      ${fieldName}: ${
-        typeConversion[dataType] ? typeConversion[dataType] : 'Int'
+        typeConversion[dataType] ? typeConversion[dataType] : 'String'
       }`;
       // if the field is not nullable and for a create mutation type, ! operator is added to the response type
       if (isNullable === 'NO' && !primaryKeyRequired) mutationFields += '!';
@@ -80,7 +80,9 @@ customHelper.getFields = (primaryKey, foreignKeys, columns) => {
     // check if current column is neither a foreign key or a primary key
     if ((!foreignKeys || !foreignKeys[fieldName]) && fieldName !== primaryKey) {
       const { dataType, isNullable } = columns[fieldName];
-      fields += `\n  ${fieldName}: ${typeConversion[dataType]}`;
+      fields += `\n  ${fieldName}: ${
+        typeConversion[dataType] ? typeConversion[dataType] : 'String'
+      }`;
       if (isNullable === 'NO') fields += `!`;
     }
   }

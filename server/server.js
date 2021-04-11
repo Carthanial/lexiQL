@@ -2,25 +2,9 @@ const express = require('express');
 const path = require('path');
 const router = require('./router');
 const app = express();
-// const { ApolloServer, gql } = require('apollo-server-express');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// const server = new ApolloServer({
-//   typeDefs: gql`
-//     type Query {
-//       hello: String
-//     }
-//   `,
-//   resolvers: {
-//     Query: {
-//       hello: () => 'Hello world!',
-//     },
-//   },
-// });
-
-// server.applyMiddleware({ app });
 
 app.use('/', router);
 // to only run build and get static when in production, not development

@@ -2,11 +2,12 @@ const toCamelCase = require('camelcase');
 const { singular } = require('pluralize');
 const { pascalCase } = require('pascal-case');
 const { isJunctionTable } = require('./helperFunctions');
-const { Pool } = require('pg');
+
+/*********************************************************************************/
+// Contain functions used in the createResolvers function
 const resolverHelper = {};
 
-/* */
-
+// building resolvers for quaries searching for a specific entity in a table by its _id
 resolverHelper.queryByPrimaryKey = (
   tableName,
   primaryKey,
@@ -28,9 +29,7 @@ resolverHelper.queryByPrimaryKey = (
       .then((data) => data.rows[0])
       .catch((err) => new Error(err));
   };
-
-  // console.log(resolversObject.Query[queryName](null,1))
-
+  // building mirrorReducers string to be displayed on CodeMirror
   return `
     ${toCamelCase(queryName)}: (parent, args) => {
       const query = 'SELECT * FROM ${tableName} WHERE ${primaryKey} = $1';
@@ -40,7 +39,7 @@ resolverHelper.queryByPrimaryKey = (
         .catch(err => new Error(err));
     },`;
 };
-
+// building resolvers for quaries of all data in a table
 resolverHelper.queryAll = (tableName, resolversObject, db) => {
   // build resolversObject for makeExecutableSchema to generate GraphiQL playground
   const camelCaseTableName = toCamelCase(tableName);
@@ -51,8 +50,7 @@ resolverHelper.queryAll = (tableName, resolversObject, db) => {
       .then((data) => data.rows)
       .catch((err) => new Error(err));
   };
-  // console.log(resolversObject.Query[tableName]());
-
+  // building mirrorReducers string to be displayed on CodeMirror
   return `
     ${toCamelCase(tableName)}: () => {
       const query = 'SELECT * FROM ${tableName}';
@@ -62,8 +60,8 @@ resolverHelper.queryAll = (tableName, resolversObject, db) => {
     },`;
 };
 
-/* */
-
+/***********************************************************************/
+// building resolvers for each tables(GQL Types) create mutation
 resolverHelper.createMutation = (
   tableName,
   primaryKey,
@@ -83,11 +81,7 @@ resolverHelper.createMutation = (
 
   // build resolversObject for makeExecutableSchema to generate GraphiQL playground
   resolversObject.Mutation[mutationName] = (parent, args) => {
-    const valuesListClean = columnsArray.map(
-      (column) => args[column]
-      // const columnClean = column.toLowerCase;
-      // args[columnClean];
-    );
+    const valuesListClean = columnsArray.map((column) => args[column]);
     const query = `INSERT INTO ${tableName} (${columnsArgument}) VALUES (${valuesArgument}) RETURNING *`;
     const values = valuesListClean;
 
@@ -96,7 +90,7 @@ resolverHelper.createMutation = (
       .then((data) => data.rows[0])
       .catch((err) => new Error(err));
   };
-
+  // building mirrorReducers string to be displayed on CodeMirror
   return `
     ${mutationName}: (parent, args) => {
       const query = 'INSERT INTO ${tableName} (${columnsArgument}) VALUES (${valuesArgument}) RETURNING *';
@@ -107,6 +101,7 @@ resolverHelper.createMutation = (
     },`;
 };
 
+// building resolvers for each tables(GQL Types) update mutation
 resolverHelper.updateMutation = (
   tableName,
   primaryKey,
@@ -136,9 +131,9 @@ resolverHelper.updateMutation = (
     }
     //valuesListClean.push(args[primaryKey]);
     valList.push(args[primaryKey]);
-    const argsArray = Object.keys(args);
+    const argsArray = Object.keys(args).filter((key) => key !== primaryKey);
     let setString = argsArray.map((key, i) => `${key} = $${i + 1}`).join(', ');
-    const pKArg = `$${argsArray.length}`;
+    const pKArg = `$${argsArray.length + 1}`;
 
     console.log('ARGS: ', args);
     //const query = `UPDATE ${tableName} SET ${setStatement} WHERE ${primaryKey} = ${primaryKeyArgument} RETURNING *`;
@@ -151,7 +146,7 @@ resolverHelper.updateMutation = (
       .then((data) => data.rows[0])
       .catch((err) => new Error(err));
   };
-
+  // building mirrorReducers string to be displayed on CodeMirror
   return `
     ${mutationName}: (parent, args) => {
       const query = 'UPDATE ${tableName} SET ${setStatement} WHERE ${primaryKey} = ${primaryKeyArgument} RETURNING *';
@@ -162,6 +157,7 @@ resolverHelper.updateMutation = (
     },`;
 };
 
+// building resolvers for each tables(GQL Types) delete mutation
 resolverHelper.deleteMutation = (
   tableName,
   primaryKey,
@@ -179,7 +175,7 @@ resolverHelper.deleteMutation = (
       .then((data) => data.rows[0])
       .catch((err) => new Error(err));
   };
-
+  // building mirrorReducers string to be displayed on CodeMirror
   return `
     ${mutationName}: (parent, args) => {
       const query = 'DELETE FROM ${tableName} WHERE ${primaryKey} = $1 RETURNING *';
@@ -189,9 +185,8 @@ resolverHelper.deleteMutation = (
         .catch(err => new Error(err));
     },`;
 };
-
-/* */
-
+/***************************************************************************************************************/
+// building resolvers for each tables(GQL Types) different relationship types (foreignKeys, tables referencing the current table etc.)
 resolverHelper.identifyRelationships = (
   tableName,
   sqlSchema,
@@ -301,7 +296,9 @@ resolverHelper.identifyRelationships = (
   }
   return resolverBody;
 };
+/*******************Functions Called In Above Function*****************************/
 
+// building resolvers for each tables(GQL Types) junction table relationships
 resolverHelper.junctionTableRelationships = (
   tableName,
   primaryKey,
@@ -323,7 +320,7 @@ resolverHelper.junctionTableRelationships = (
       .then((data) => data.rows)
       .catch((err) => new Error(err));
   };
-
+  // building mirrorReducers string to be displayed on CodeMirror
   return `
     ${toCamelCase(refByTableFKName)}: (${toCamelCase(tableName)}) => {
       const query = 'SELECT * FROM ${refByTableFKName} LEFT OUTER JOIN ${refByTable} ON ${refByTableFKName}.${refByTableFKKey} = ${refByTable}.${refByTableFK} WHERE ${refByTable}.${refByTableTableNameAlias} = $1';
@@ -334,6 +331,7 @@ resolverHelper.junctionTableRelationships = (
     }, `;
 };
 
+// building resolvers for each tables(GQL Types) relationships to other custom objects (types/tables)
 resolverHelper.customObjectsRelationships = (
   tableName,
   primaryKey,
@@ -356,7 +354,7 @@ resolverHelper.customObjectsRelationships = (
       .then((data) => data.rows)
       .catch((err) => new Error(err));
   };
-
+  // building mirrorReducers string to be displayed on CodeMirror
   return `
     ${toCamelCase(refByTable)}: (${toCamelCase(tableName)}) => {
       const query = 'SELECT * FROM ${refByTable} WHERE ${refByKey} = $1';
@@ -366,7 +364,7 @@ resolverHelper.customObjectsRelationships = (
         .catch(err => new Error(err));
     },`;
 };
-
+// building resolvers for each tables(GQL Types) foreign key relationships
 resolverHelper.foreignKeyRelationships = (
   tableName,
   primaryKey,
@@ -390,7 +388,7 @@ resolverHelper.foreignKeyRelationships = (
       .then((data) => data.rows)
       .catch((err) => new Error(err));
   };
-
+  // building mirrorReducers string to be displayed on CodeMirror
   return `
     ${toCamelCase(fkTableName)}: (${toCamelCase(tableName)}) => {
       const query = 'SELECT ${fkTableName}.* FROM ${fkTableName} LEFT OUTER JOIN ${tableName} ON ${fkTableName}.${fkKey} = ${tableName}.${fk} WHERE ${tableName}.${primaryKey} = $1';
