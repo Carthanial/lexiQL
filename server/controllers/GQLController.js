@@ -4,11 +4,15 @@ const { makeExecutableSchema } = require('graphql-tools');
 const GQLController = {};
 
 GQLController.createGQLSchema = (req, res, next) => {
-  const { SQLSchema } = res.locals;
+  const { SQLSchema, PSQLURI } = res.locals;
+
   try {
     const { types, typeDefs } = createTypes(SQLSchema);
     // let { resolvers, resolversObject } = createResolvers(SQLSchema);
-    const { mirrorResolvers, resolversObject } = createResolvers(SQLSchema);
+    const { mirrorResolvers, resolversObject } = createResolvers(
+      SQLSchema,
+      PSQLURI
+    );
     res.locals.GQLSchema = { types, mirrorResolvers };
 
     const resolvers = resolversObject;

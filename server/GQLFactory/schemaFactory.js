@@ -41,16 +41,16 @@ schemaFactory.createTypes = (sqlSchema) => {
   return { types, typeDefs };
 };
 
-schemaFactory.createResolvers = (sqlSchema) => {
+schemaFactory.createResolvers = (sqlSchema, PSQLURI) => {
   let queryResolvers = '';
   let mutationResolvers = '';
   let customObjectTypeResolvers = '';
 
   // initialize pool connection to provided PSQL_URI for resolver functionality in graphiql playground
   const pool = new Pool({
-    connectionString:
-      'postgres://gilbfloq:VFX4UsWP_OJ43C2_jfOX2kRq-ktq0iXL@ziggy.db.elephantsql.com:5432/gilbfloq',
+    connectionString: PSQLURI,
   });
+
   const db = {};
   db.query = (text, params, callback) => {
     console.log('executed query:', text);
