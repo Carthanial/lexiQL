@@ -1,51 +1,34 @@
-import React, { useState, Fragment, useContext } from 'react';
-import ReactFlow, {
-  addEdge,
-  Background,
-  Controls,
-  MiniMap,
-} from 'react-flow-renderer';
-import { VisualizerContext } from '../state/contexts';
+import React, { memo, useContext } from "react";
+import { Handle } from "react-flow-renderer";
 
-// const initialElements = [
-//   { id: '1', type: 'input', data: { label: 'Node' }, position: { x: 0, y: 0 } },
-// ];
+import { DiagramContext } from "../state/contexts";
+import ColumnNode from "./columnNode";
 
-const onLoad = (reactFlowInstance) => {
-  reactFlowInstance.fitView();
-};
+export default memo(({ data }) => {
+  const { tableName, columns, dataTypes } = data;
 
-export default function tableNode() {
-  const { visualizerState } = useContext(VisualizerContext);
+  /*
+  // conditional because for some reason the array is undefined for the first two logs?? brute forcing it ...
+*/
+  let tableColumns;
 
-  // this lets you connect to other nodes
-  const onConnect = (params) => setElements((e) => addEdge(params, e));
+  columns
+    ? (tableColumns = columns.map((column, index) => (
+        <ColumnNode
+          columnName={column}
+          dataType={dataTypes[index]}
+          id={`${column}`}
+        />
+      )))
+    : tableColumns;
 
   return (
-    <Fragment>
-      <ReactFlow
-        minzoom={0.3}
-        maxzoom={0.7}
-        defaultzoom={.5}
-        // zoomOnScroll={zoomOnScroll}
-        elements={visualizerState.tableNodes}
-        onLoad={onLoad}
-        style={{ width: '100%', height: '90vh' }}
-        onConnect={onConnect}
-        connectionLineStyle={{ stroke: '#ddd', strokeWidth: 2 }}
-        connectionLineType="bezier"
-        snapToGrid={true}
-        snapGrid={[16, 16]}
-      >
-        <Background color="#888" gap={16} />
-        {/* 
-        <MiniMap
-          nodeColor={(n) => {
-            if (n.type === 'input') return 'blue';
-            return '#FFCC00';
-          }}
-        /> */}
-      </ReactFlow>
-    </Fragment>
+    <>
+      <div className="tableHeader">
+        <strong>{tableName}</strong>
+      </div>
+      <br />
+      {tableColumns}
+    </>
   );
-}
+});

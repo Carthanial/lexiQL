@@ -1,10 +1,11 @@
-import React from 'react';
-import Logo from '../assets/lexiql-logo.png';
+import React from "react";
+// import Logo from '../assets/lexiql-logo.png';
+import Logo from "../assets/new-logo.png";
 
 export default function introContainer() {
   return (
     <div id="about">
-      <img id='logo' src={Logo} alt='logo' />
+      <img id="logo" src={Logo} alt="logo" />
       {/* <div className="aboutProject"> 
         <h3>What do we do?</h3>
         <p>
