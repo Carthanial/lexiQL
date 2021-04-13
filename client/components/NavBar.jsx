@@ -3,10 +3,23 @@ import { Route, Switch, Link, useLocation } from 'react-router-dom';
 import HomePage from '../pages/homePage.jsx';
 import DataPage from '../pages/dataPage.jsx';
 import Logo from '../assets/new-logo.png';
+import { GraphiQL } from 'graphiql';
+// import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+// import 'graphiql/graphiql.min.css';
 
 export default function navBar() {
   const location = useLocation();
-
+  //  Used to route requests for the GraphiQL component (required)
+  const fetcher = (graphQLParams) => {
+    return fetch('/playground', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(graphQLParams),
+    })
+      .then((res) => res.json())
+      .catch((err) => console.log('ERR: ', err));
+  };
+  console.log(GraphiQL);
   if (location.pathname === '/') {
     return (
       <body id="homeBody">
@@ -62,7 +75,7 @@ export default function navBar() {
 
         <Switch>
           <Route path="/playground">
-            <h1>insert Graphiql playground here</h1>
+            <GraphiQL fetcher={fetcher} />
           </Route>
 
           <Route path="/data">
@@ -91,7 +104,7 @@ export default function navBar() {
 
         <Switch>
           <Route path="/playground">
-            <h1>insert Graphiql playground here</h1>
+            <GraphiQL fetcher={fetcher} />
           </Route>
 
           <Route path="/data">
