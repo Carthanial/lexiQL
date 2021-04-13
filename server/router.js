@@ -46,7 +46,7 @@ router.post(
 // );
 
 router.use(
-  '/graphiql',
+  '/playground',
   graphqlHTTP({
     schema,
     graphiql: false,

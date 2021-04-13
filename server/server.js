@@ -13,6 +13,10 @@ app.use('/build', express.static(path.join(__dirname, '../build')));
 app.get('/', (req, res) =>
   res.status(200).sendFile(path.resolve(__dirname, '../client/index.html'))
 );
+// serves visualizer on refresh or direct request
+app.get('/data', (req, res) =>
+  res.status(200).sendFile(path.resolve(__dirname, '../client/index.html'))
+);
 // catch all route handler
 app.use('*', (req, res) => {
   res.status(404).send('Not Found');
