@@ -278,6 +278,7 @@ export default function formContainer() {
             schema: data.GQLSchema.types,
             resolver: data.GQLSchema.mirrorResolvers,
             displayCode: data.GQLSchema.types,
+            executableSchema: data.GQLSchema.executableSchema,
           },
         });
 
@@ -503,6 +504,7 @@ export default function formContainer() {
             schema: data.GQLSchema.types,
             resolver: data.GQLSchema.mirrorResolvers,
             displayCode: data.GQLSchema.types,
+            executableSchema: data.GQLSchema.executableSchema,
           },
         });
 
