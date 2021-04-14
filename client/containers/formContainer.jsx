@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import URIbtn from '../components/URIbtn';
-import { FormContext } from '../state/contexts';
+import { FormContext, GraphiqlContext } from '../state/contexts';
 import CryptoJS from 'crypto-js';
 import secretKey from '../../server/secretKey';
 
@@ -14,6 +14,7 @@ export default function formContainer() {
     codeDispatch,
   } = useContext(FormContext);
 
+  const { graphiqlState, graphiqlDispatch } = useContext(GraphiqlContext);
   // this file needs to be cleaned up and possibly separated much further
 
   // get the data from the sample DB
@@ -278,7 +279,13 @@ export default function formContainer() {
             schema: data.GQLSchema.types,
             resolver: data.GQLSchema.mirrorResolvers,
             displayCode: data.GQLSchema.types,
-            executableSchema: data.GQLSchema.executableSchema,
+          },
+        });
+
+        graphiqlDispatch({
+          type: 'SET_SCHEMA',
+          payload: {
+            graphiqlSchema: data.GQLSchema.graphiqlSchema,
           },
         });
 
@@ -504,7 +511,13 @@ export default function formContainer() {
             schema: data.GQLSchema.types,
             resolver: data.GQLSchema.mirrorResolvers,
             displayCode: data.GQLSchema.types,
-            executableSchema: data.GQLSchema.executableSchema,
+          },
+        });
+
+        graphiqlDispatch({
+          type: 'SET_SCHEMA',
+          payload: {
+            graphiqlSchema: data.GQLSchema.graphiqlSchema,
           },
         });
 

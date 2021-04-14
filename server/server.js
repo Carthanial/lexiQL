@@ -17,6 +17,10 @@ app.get('/', (req, res) =>
 app.get('/data', (req, res) =>
   res.status(200).sendFile(path.resolve(__dirname, '../client/index.html'))
 );
+// serves playground on refresh or direct request
+app.get('/playground', (req, res) =>
+  res.status(200).sendFile(path.resolve(__dirname, '../client/index.html'))
+);
 // catch all route handler
 app.use('*', (req, res) => {
   res.status(404).send('Not Found');

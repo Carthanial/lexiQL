@@ -22,19 +22,23 @@ export const initialCodeState = {
   schema: '',
   resolver: '',
   displayCode: '',
-  executableSchema: '',
+  graphiqlSchema: '',
   codeIsOpen: true,
 };
 
 export const codeReducer = (state, action) => {
   switch (action.type) {
     case 'SET_CODE':
+      console.log(
+        'CODEREDUCER GRAPHIQLSCHEMA: ',
+        action.payload.graphiqlSchema
+      );
       return {
         ...state,
         schema: action.payload.schema,
         resolver: action.payload.resolver,
         displayCode: action.payload.displayCode,
-        executableSchema: data.GQLSchema.executableSchema,
+        graphiqlSchema: action.payload.graphiqlSchema,
       };
     case 'SET_DISPLAY':
       return {
@@ -62,6 +66,24 @@ export const formReducer = (state, action) => {
         ...state,
         formIsOpen: action.payload.formIsOpen,
         firstFetch: action.payload.firstFetch,
+      };
+  }
+};
+
+export const initialGraphiqlState = {
+  graphiqlSchema: '',
+};
+
+export const graphiqlReducer = (state, action) => {
+  switch (action.type) {
+    case 'SET_SCHEMA':
+      console.log(
+        'GRAPHIQLREDUCER GRAPHIQLSCHEMA: ',
+        action.payload.graphiqlSchema
+      );
+      return {
+        ...state,
+        graphiqlSchema: action.payload.graphiqlSchema,
       };
   }
 };

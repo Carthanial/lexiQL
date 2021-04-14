@@ -34,13 +34,12 @@ router.post(
   }
 );
 
-// route to graphiql playground **middleware to be changed
+//route to graphiql playground **middleware to be changed
 // router.use(
-//   '/graphiql',
-//   getSQLSchema,
-//   createGQLSchema,
+//   '/playground',
+//   (req, res) => console.log('req.body: ', req.body),
 //   graphqlHTTP((req, res) => ({
-//     schema: res.locals.GQLSchema.graphiqlSchema,
+//     schema: req.body,
 //     graphiql: true,
 //   }))
 // );
