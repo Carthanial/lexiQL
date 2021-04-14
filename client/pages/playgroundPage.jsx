@@ -7,12 +7,12 @@ export default function playgroundPage() {
   // const { graphiqlSchema } = codeState;
   // console.log('graphiqlSchema: ', graphiqlSchema);
 
-  const { graphiqlState, graphiqlDispatch } = useContext(GraphiqlContext);
+  const { graphiqlState } = useContext(GraphiqlContext);
   const { graphiqlSchema } = graphiqlState;
   console.log('graphiqlState:', graphiqlState);
   console.log('graphiqlSchema:', graphiqlSchema);
 
-  const graphQLFetcher = (graphQLParams) => {
+  const fetcher = (graphiqlSchema) => {
     return fetch('/playground', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -26,7 +26,7 @@ export default function playgroundPage() {
   return (
     <div className="playgroundPage">
       <div>
-        <GraphiQL fetcher={graphQLFetcher} />
+        <GraphiQL fetcher={fetcher} />
       </div>
     </div>
   );

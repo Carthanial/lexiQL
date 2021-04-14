@@ -35,22 +35,21 @@ router.post(
 );
 
 //route to graphiql playground **middleware to be changed
-// router.use(
-//   '/playground',
-//   (req, res) => console.log('req.body: ', req.body),
-//   graphqlHTTP((req, res) => ({
-//     schema: req.body,
-//     graphiql: true,
-//   }))
-// );
-
 router.use(
   '/playground',
-  graphqlHTTP({
-    schema,
-    graphiql: false,
-  })
+  graphqlHTTP((req, res) => ({
+    schema: req.body,
+    graphiql: true,
+  }))
 );
+
+// router.use(
+//   '/playground',
+//   graphqlHTTP({
+//     schema,
+//     graphiql: false,
+//   })
+// );
 
 /* Route to get user (table specific) GraphQL Schema and Resolvers */
 // router.post('gql-schema', GQLController.createGQLSchema,
